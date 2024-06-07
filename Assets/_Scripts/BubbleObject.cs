@@ -17,6 +17,30 @@ public class BubbleObject : MonoBehaviour, ICollision
      }
 
    }
+   public void SetBubble()
+   {
+    switch(BubbleId)
+      {
+        case 1: 
+            GameObject bubble1 = Instantiate(LevelConverter.instance.bubble2, transform.position, Quaternion.identity);
+            bubble1.GetComponent<BubbleObject>().BubbleId = 2;
+            Destroy(gameObject);
+            break;
+        case 2: 
+            GameObject bubble2 = Instantiate(LevelConverter.instance.bubble3, transform.position, Quaternion.identity);
+            bubble2.GetComponent<BubbleObject>().BubbleId = 3;
+
+            Destroy(gameObject);
+            break;
+        case 3: 
+            GameObject bubble3 = Instantiate(LevelConverter.instance.bubble4, transform.position, Quaternion.identity);
+            bubble3.GetComponent<BubbleObject>().BubbleId = 4;
+            Destroy(gameObject);
+            break;
+        default:
+           return;
+      }
+   }
    public void HandleCollision(Transform obj)
    {
        
@@ -38,6 +62,9 @@ public class BubbleObject : MonoBehaviour, ICollision
             InitParticle();
             Destroy(gameObject);
             break;
+        default:
+           return;
+
       }
    }
 

@@ -1,13 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class GameCtr : MonoBehaviour
+public class GameCtr : Singleton<GameCtr>
 {
+  public int numberClick = 0;
+ 
   void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(0) && numberClick > 0)
         {
+            numberClick -= 1;
+            UICtr.instance.NumberClick.text =  numberClick.ToString();
+
             Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mouseWorldPosition2D = new Vector2(mouseWorldPosition.x, mouseWorldPosition.y);
 
@@ -24,8 +30,15 @@ public class GameCtr : MonoBehaviour
                     collider.gameObject.SetActive(false);
                     
                 }
+                else{
+                    collider.SetBubble();
+                }
             }
 
+        }
+        if(Input.GetKeyDown(KeyCode.A))
+        {
+            SceneManager.LoadScene(0);
         }
     }
 }

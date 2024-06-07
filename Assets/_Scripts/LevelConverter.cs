@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEngine.SceneManagement;
+using System;
 
 public class LevelConverter : Singleton<LevelConverter>
 {
@@ -10,8 +11,9 @@ public class LevelConverter : Singleton<LevelConverter>
     public GameObject bubble1;
     public GameObject bubble2;
     public GameObject bubble3;
-    public GameObject listBubble;
+    public GameObject listBubble; 
     public List<BubbleObject> bubbles;
+    private int Map = 50;
     [System.Serializable]
     public class Bubble
     {
@@ -33,17 +35,18 @@ public class LevelConverter : Singleton<LevelConverter>
         public List<Level> levels;
     }
 
-    void Start()
+    void Awake()
     {
         TextAsset jsonFile = Resources.Load<TextAsset>("1");
 
         if (jsonFile != null)
         {
-            string jsonString = jsonFile.text;
-            LevelPack levelPack = JsonUtility.FromJson<LevelPack>(jsonString);
-           for (int i = levelPack.levels[99].bubbles.Count - 1; i >= 0; i--)
+           string jsonString = jsonFile.text;
+           LevelPack levelPack = JsonUtility.FromJson<LevelPack>(jsonString);
+           GameCtr.instance.numberClick = levelPack.levels[Map].presses;
+           for (int i = levelPack.levels[Map].bubbles.Count - 1; i >= 0; i--)
             {
-                var lv = levelPack.levels[99].bubbles[i];
+                var lv = levelPack.levels[Map].bubbles[i];
                 Vector3 position = ConvertPositionToUnity(lv.x, lv.y);
                 CreateBubble(position, lv.st);
             }

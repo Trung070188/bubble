@@ -4,10 +4,10 @@ using UnityEngine;
 public class ParticleObject : MonoBehaviour
 {
     Vector3[] directions = {
-        Vector3.left * 2,
-        Vector3.right * 2,
-        Vector3.up * 2,
-        Vector3.down * 2
+        Vector3.left * 5,
+        Vector3.right * 5,
+        Vector3.up * 5,
+        Vector3.down * 5
     };
     public void direction(int i)
     {
