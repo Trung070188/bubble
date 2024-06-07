@@ -14,11 +14,12 @@ public class ParticleObject : MonoBehaviour
          Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.AddForce(directions[i]);
+            rb.velocity = directions[i];
         }
     }
     private void OnCollisionEnter2D(Collision2D other) {
         other.gameObject.GetComponent<ICollision>()?.HandleCollision(transform);
+        Destroy(gameObject);
     }
     
 }

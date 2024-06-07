@@ -1,5 +1,4 @@
 
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BubbleObject : MonoBehaviour, ICollision
@@ -20,7 +19,26 @@ public class BubbleObject : MonoBehaviour, ICollision
    }
    public void HandleCollision(Transform obj)
    {
-     Debug.Log("id : " + BubbleId);
+       
+      switch(BubbleId)
+      {
+        case 1: 
+            GameObject bubble1 = Instantiate(LevelConverter.instance.bubble2, transform.position, Quaternion.identity);
+            Destroy(gameObject);
+            break;
+        case 2: 
+            GameObject bubble2 = Instantiate(LevelConverter.instance.bubble3, transform.position, Quaternion.identity);
+            Destroy(gameObject);
+            break;
+        case 3: 
+            GameObject bubble3 = Instantiate(LevelConverter.instance.bubble4, transform.position, Quaternion.identity);
+            Destroy(gameObject);
+            break;
+        case 4: 
+            InitParticle();
+            Destroy(gameObject);
+            break;
+      }
    }
 
 }

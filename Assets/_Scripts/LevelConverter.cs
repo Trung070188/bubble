@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.SceneManagement;
 
-public class LevelConverter : MonoBehaviour
+public class LevelConverter : Singleton<LevelConverter>
 {
     public GameObject bubble4;
     public GameObject bubble1;
@@ -59,19 +59,19 @@ public class LevelConverter : MonoBehaviour
         switch (state)
         {
             case 1:
-                bubble = Instantiate(bubble1, position, Quaternion.identity, listBubble.transform);
+                bubble = Instantiate(bubble1, position, Quaternion.identity);
                 break;
             case 2:
-                bubble = Instantiate(bubble2, position, Quaternion.identity, listBubble.transform);
+                bubble = Instantiate(bubble2, position, Quaternion.identity);
                 break;
             case 3:
-                bubble = Instantiate(bubble3, position, Quaternion.identity, listBubble.transform);
+                bubble = Instantiate(bubble3, position, Quaternion.identity);
                 break;
             case 4:
-                bubble = Instantiate(bubble4, position, Quaternion.identity, listBubble.transform);
+                bubble = Instantiate(bubble4, position, Quaternion.identity);
                 break;
             default:
-                bubble = Instantiate(bubble4, position, Quaternion.identity, listBubble.transform);
+                bubble = Instantiate(bubble4, position, Quaternion.identity);
                 break;
         }
 
