@@ -10,6 +10,8 @@ public class LevelConverter : MonoBehaviour
     public GameObject bubble1;
     public GameObject bubble2;
     public GameObject bubble3;
+    public GameObject listBubble;
+    public List<BubbleObject> bubbles;
     [System.Serializable]
     public class Bubble
     {
@@ -39,21 +41,12 @@ public class LevelConverter : MonoBehaviour
         {
             string jsonString = jsonFile.text;
             LevelPack levelPack = JsonUtility.FromJson<LevelPack>(jsonString);
-            Debug.Log(levelPack.levels[0].bubbles[0]);
-           for (int i = levelPack.levels[3].bubbles.Count - 1; i >= 0; i--)
+           for (int i = levelPack.levels[99].bubbles.Count - 1; i >= 0; i--)
             {
-                var lv = levelPack.levels[3].bubbles[i];
+                var lv = levelPack.levels[99].bubbles[i];
                 Vector3 position = ConvertPositionToUnity(lv.x, lv.y);
                 CreateBubble(position, lv.st);
             }
-
-            // foreach (Level level in levelPack.levels)
-            // {
-            //     foreach (Bubble bubble in level.bubbles)
-            //     {
-            //         // Debug.Log("Bubble at (" + bubble.x + ", " + bubble.y + ") with state " + bubble.st);
-            //     }
-            // }
         }
         else
         {
@@ -66,23 +59,24 @@ public class LevelConverter : MonoBehaviour
         switch (state)
         {
             case 1:
-                bubble = Instantiate(bubble1, position, Quaternion.identity);
+                bubble = Instantiate(bubble1, position, Quaternion.identity, listBubble.transform);
                 break;
             case 2:
-                bubble = Instantiate(bubble2, position, Quaternion.identity);
+                bubble = Instantiate(bubble2, position, Quaternion.identity, listBubble.transform);
                 break;
             case 3:
-                bubble = Instantiate(bubble3, position, Quaternion.identity);
+                bubble = Instantiate(bubble3, position, Quaternion.identity, listBubble.transform);
                 break;
             case 4:
-                bubble = Instantiate(bubble4, position, Quaternion.identity);
+                bubble = Instantiate(bubble4, position, Quaternion.identity, listBubble.transform);
                 break;
             default:
-                bubble = Instantiate(bubble4, position, Quaternion.identity);
+                bubble = Instantiate(bubble4, position, Quaternion.identity, listBubble.transform);
                 break;
         }
+
     }
-       private Vector3 ConvertPositionToUnity(int x, int y)
+    private Vector3 ConvertPositionToUnity(int x, int y)
     {
         float scaledX = 32 + 64 * (x - 0.85f);
         float scaledY = 64 + 64 * (6 - y);
@@ -91,11 +85,5 @@ public class LevelConverter : MonoBehaviour
         float unityY = (scaledY / 480) * Screen.height;
 
         return Camera.main.ScreenToWorldPoint(new Vector3(unityX, unityY, Camera.main.nearClipPlane));
-    }
-    private void Update() {
-        if(Input.GetKeyDown(KeyCode.A))
-        {
-            SceneManager.LoadScene(0);
-        }
     }
 }
