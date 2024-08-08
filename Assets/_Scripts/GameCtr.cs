@@ -38,7 +38,7 @@ public class GameCtr : Singleton<GameCtr>
         }
         if(Input.GetKeyDown(KeyCode.A))
         {
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(DataConfig.MAINSCENE);
         }
     }
 }
