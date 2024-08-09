@@ -14,6 +14,10 @@ public class LevelConverter : Singleton<LevelConverter>
     public GameObject listBubble; 
     public List<BubbleObject> bubbles;
     private int Map = 50;
+
+    [SerializeField]
+    private Transform bubbleParent;
+
     [System.Serializable]
     public class Bubble
     {
@@ -62,19 +66,19 @@ public class LevelConverter : Singleton<LevelConverter>
         switch (state)
         {
             case 1:
-                bubble = Instantiate(bubble1, position, Quaternion.identity);
+                bubble = Instantiate(bubble1, position, Quaternion.identity, bubbleParent);
                 break;
             case 2:
-                bubble = Instantiate(bubble2, position, Quaternion.identity);
+                bubble = Instantiate(bubble2, position, Quaternion.identity, bubbleParent);
                 break;
             case 3:
-                bubble = Instantiate(bubble3, position, Quaternion.identity);
+                bubble = Instantiate(bubble3, position, Quaternion.identity, bubbleParent);
                 break;
             case 4:
-                bubble = Instantiate(bubble4, position, Quaternion.identity);
+                bubble = Instantiate(bubble4, position, Quaternion.identity, bubbleParent);
                 break;
             default:
-                bubble = Instantiate(bubble4, position, Quaternion.identity);
+                bubble = Instantiate(bubble4, position, Quaternion.identity, bubbleParent);
                 break;
         }
 

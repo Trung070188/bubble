@@ -10,10 +10,15 @@ public class DataConfig
 
     //Player prefs
     public const string CURRENTLV = "currentLv";
-    public const string LV = "lv";
-    public const string CURRENTCHAPTER = "currentChapter";
+    public const string LV = "lv"; //x
+    public const string CURRENTCHAPTER = "currentChapter"; 
     public const string LASTSELECTCHAPTER = "lastSelectChap";
 
     //level Data
     public static int SelectedLv = 0;
+
+    //json path
+    public const string PLAYEDDATAPATH = "DataChap";
+
+    public static bool ReturnFromGame = false;
 }

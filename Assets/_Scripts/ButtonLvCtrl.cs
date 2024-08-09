@@ -15,8 +15,11 @@ public class ButtonLvCtrl : MonoBehaviour
     [SerializeField]
     private GameObject star;
 
+    private int _lv = 0;
+
     public void Init(bool isPlayed, int lv, int starNum, bool isFirstPlay) 
     {
+        _lv = lv - 1;
         if (isPlayed)
         {
             gameObject.GetComponent<Image>().sprite = MenuCtrl.Instance.PlayedSprite;
@@ -37,5 +40,10 @@ public class ButtonLvCtrl : MonoBehaviour
         {
             gameObject.GetComponent<Image>().sprite = MenuCtrl.Instance.NotPlaySprite;
         }
+    }
+
+    public void OnClickBtnLevel()
+    {
+        DataConfig.SelectedLv = _lv;
     }
 }
