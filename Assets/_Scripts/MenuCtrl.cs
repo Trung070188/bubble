@@ -1,8 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuCtrl : MonoBehaviour
 {
@@ -31,9 +33,8 @@ public class MenuCtrl : MonoBehaviour
 
     public Sprite NotPlaySprite;
 
-    private int _curLv = 0;
     private int _curChap = 0;
-    private int _lastSelectedChapter = 0;
+    //private int _lastSelectedChapter = 0;
 
     //Singleton
     public static MenuCtrl Instance { get; private set; }
@@ -46,9 +47,24 @@ public class MenuCtrl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _curLv = PlayerPrefs.GetInt(DataConfig.CURRENTLV, 0);
-        _curChap = PlayerPrefs.GetInt(DataConfig.CURRENTCHAPTER, 1);
-        _lastSelectedChapter = PlayerPrefs.GetInt(DataConfig.LASTSELECTCHAPTER, 1);
+        _curChap = PlayerPrefs.GetInt(DataConfig.CURRENTCHAPTER, -1);
+
+        //set playerpref default
+        if (_curChap == -1)
+        {
+            PlayerPrefs.SetInt(DataConfig.CURRENTCHAPTER, 1);
+            PlayerPrefs.SetInt(DataConfig.CURRENTLV + "1", 0);
+            _curChap = 1;
+        }
+
+        //_lastSelectedChapter = PlayerPrefs.GetInt(DataConfig.LASTSELECTCHAPTER, 1);
+
+        chapterDropdown.onValueChanged.AddListener(delegate
+        {
+            LoadLv(chapterDropdown.value + 1);
+        });
+
+        //check if open or return from main game
         if (!DataConfig.ReturnFromGame)
         {
             ChooseModeScreenBackBtn();
@@ -57,8 +73,6 @@ public class MenuCtrl : MonoBehaviour
         {
             AdventureMode();
         }
-
-        chapterDropdown.onValueChanged.AddListener(LoadLv);
     }
 
     // Update is called once per frame
@@ -76,38 +90,71 @@ public class MenuCtrl : MonoBehaviour
 
     public void AdventureMode()
     {
+        DataConfig.IsArcadeMode = false;
         startScreen.SetActive(false);
         chooseModeScreen.SetActive(false);
         //LoadLv(_lastSelectedChapter);
-        chapterDropdown.value = _lastSelectedChapter - 1;
-        if (_lastSelectedChapter == 1)
+        chapterDropdown.value = _curChap - 1;
+        if (_curChap == 1)
         {
-            LoadLv(0);
+            LoadLv(1);
         }
     }
 
+    public void ArcadeMode()
+    {
+        if (PlayerPrefs.GetInt(DataConfig.LIFE, DataConfig.DEFAULTLIFE) > 0)
+        {
+            PlayerPrefs.SetInt(DataConfig.LIFE, PlayerPrefs.GetInt(DataConfig.LIFE, DataConfig.DEFAULTLIFE) - 1);
+            DataConfig.SelectedChap = Random.Range(1, 3);
+            DataConfig.SelectedLv = Random.Range(49, 100);
+            DataConfig.IsArcadeMode = true;
+            DataConfig.Streak = 0;
+            SceneManager.LoadScene(DataConfig.MAINSCENE);
+        }
+    }
+
+    /*public void OnDropdownValueChange(TMP_Dropdown dropdown)
+    {
+        LoadLv(dropdown.value + 1);
+    }*/
+
     public void LoadLv(int chapter)
     {
+        //set chapter selected for spawn level in game
+        DataConfig.SelectedChap = chapter;
+        int curLv = PlayerPrefs.GetInt(DataConfig.CURRENTLV + chapter, 0);
+
+        //remove all level button have in lvsContentParent to spawn new buttons
         foreach (Transform child in lvsContentParent.transform)
         {
             Destroy(child);
         }
+
+        //spawn level buttons
         for (int i = 0; i < 100; i++)
         {
             GameObject lv = Instantiate(lvPrefab, lvsContentParent.transform);
-            bool isPlayed = ((chapter + 1) <= _curChap && i <= _curLv) ? true : false;
+            bool isPlayed = (chapter <= _curChap && i <= curLv) ? true : false;
             //int star = PlayerPrefs.GetInt(DataConfig.LV + chapter + i, 0);
             //lv.GetComponent<ButtonLvCtrl>().Init(isPlayed, i + 1, star, )
             if (isPlayed)
             {
                 PlayedLvDatas datas = new PlayedLvDatas();
                 //string path = Application.dataPath + "/Resources/" + DataConfig.PLAYEDDATAPATH + chapter + ".json";
-                TextAsset json = Resources.Load<TextAsset>(DataConfig.PLAYEDDATAPATH + (chapter + 1));
+                TextAsset json = Resources.Load<TextAsset>(DataConfig.PLAYEDDATAPATH + chapter);
                 if (json != null)
                 {
                     string jsonString = json.text;
                     datas = JsonUtility.FromJson<PlayedLvDatas>(jsonString);
-                    lv.GetComponent<ButtonLvCtrl>().Init(isPlayed, i + 1, datas.Datas[i].Star, datas.Datas[i].IsFirstPlay);
+                    if (i < datas.Datas.Count - 1)
+                    {
+                        bool isfirstPlay = datas.Datas[i].Numbertries <= 1 && datas.Datas[i].IsPlayed;
+                        lv.GetComponent<ButtonLvCtrl>().Init(isPlayed, i + 1, datas.Datas[i].Star, isfirstPlay);
+                    } else
+                    {
+                        lv.GetComponent<ButtonLvCtrl>().Init(isPlayed, i + 1, datas.Datas[i].Star, false);
+                    }
                 }
                 else
                 {
@@ -133,17 +180,19 @@ public class MenuCtrl : MonoBehaviour
 public class PlayedLvData
 {
     public int Star;
-    public bool IsFirstPlay;
+    public int Numbertries;
+    public bool IsPlayed; //đã chơi qua lv
 
     public PlayedLvData()
     {
         
     }
 
-    public PlayedLvData(int star, bool isFirstPlay)
+    public PlayedLvData(int star, int numbertries, bool isPlayed)
     {
         Star = star;
-        IsFirstPlay = isFirstPlay;
+        Numbertries = numbertries;
+        this.IsPlayed = isPlayed;
     }
 }
 

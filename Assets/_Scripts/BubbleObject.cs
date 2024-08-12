@@ -15,7 +15,7 @@ public class BubbleObject : MonoBehaviour, ICollision
         GameObject particle = Instantiate(Particle, transform.position, Quaternion.identity);
         particle.GetComponent<ParticleObject>().direction(i);
      }
-
+        Destroy(gameObject);
    }
    public void SetBubble()
    {

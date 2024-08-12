@@ -13,7 +13,7 @@ public class LevelConverter : Singleton<LevelConverter>
     public GameObject bubble3;
     public GameObject listBubble; 
     public List<BubbleObject> bubbles;
-    private int Map = 50;
+    private int _lv = 0;
 
     [SerializeField]
     private Transform bubbleParent;
@@ -41,16 +41,18 @@ public class LevelConverter : Singleton<LevelConverter>
 
     void Awake()
     {
+
+
         TextAsset jsonFile = Resources.Load<TextAsset>("1");
 
         if (jsonFile != null)
         {
            string jsonString = jsonFile.text;
            LevelPack levelPack = JsonUtility.FromJson<LevelPack>(jsonString);
-           GameCtr.instance.numberClick = levelPack.levels[Map].presses;
-           for (int i = levelPack.levels[Map].bubbles.Count - 1; i >= 0; i--)
+           GameCtr.instance.numberClick = levelPack.levels[_lv].presses;
+           for (int i = levelPack.levels[_lv].bubbles.Count - 1; i >= 0; i--)
             {
-                var lv = levelPack.levels[Map].bubbles[i];
+                var lv = levelPack.levels[_lv].bubbles[i];
                 Vector3 position = ConvertPositionToUnity(lv.x, lv.y);
                 CreateBubble(position, lv.st);
             }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ButtonLvCtrl : MonoBehaviour
@@ -22,6 +23,7 @@ public class ButtonLvCtrl : MonoBehaviour
         _lv = lv - 1;
         if (isPlayed)
         {
+            gameObject.GetComponent<Button>().interactable = true;
             gameObject.GetComponent<Image>().sprite = MenuCtrl.Instance.PlayedSprite;
             levelTxtG.GetComponent<TextMeshProUGUI>().text = lv.ToString();
             levelTxtG.SetActive(true);
@@ -38,12 +40,25 @@ public class ButtonLvCtrl : MonoBehaviour
             }
         } else
         {
+            gameObject.GetComponent<Button>().interactable = false;
             gameObject.GetComponent<Image>().sprite = MenuCtrl.Instance.NotPlaySprite;
         }
     }
 
     public void OnClickBtnLevel()
     {
-        DataConfig.SelectedLv = _lv;
+        int life = PlayerPrefs.GetInt(DataConfig.LIFE, -1);
+        if (life == -1)
+        {
+            life = DataConfig.DEFAULTLIFE;
+            PlayerPrefs.SetInt(DataConfig.LIFE, DataConfig.DEFAULTLIFE);
+        } 
+        if (life > 0)
+        {
+            life--;
+            PlayerPrefs.SetInt(DataConfig.LIFE, life);
+            DataConfig.SelectedLv = _lv;
+            SceneManager.LoadScene(DataConfig.MAINSCENE);
+        }
     }
 }
