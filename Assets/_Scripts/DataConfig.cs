@@ -27,8 +27,9 @@ public class DataConfig
     public static bool ReturnFromGame = false;
 
     //default value
-    public const int DEFAULTLIFE = 3;
+    public const int DEFAULTLIFE = 100;
     public const int MAXCHAP = 2;
+    public const int DEFAULTARCADECLICKS = 5;
 
     //Mode
     public static bool IsArcadeMode = false;

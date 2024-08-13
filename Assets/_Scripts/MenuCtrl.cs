@@ -29,11 +29,16 @@ public class MenuCtrl : MonoBehaviour
     [SerializeField]
     private TMP_Dropdown chapterDropdown;
 
+    [SerializeField]
+    private GameObject notEnoughLifePopup;
+
     public Sprite PlayedSprite;
 
     public Sprite NotPlaySprite;
 
     private int _curChap = 0;
+
+    private List<GameObject> _lvBtnLst = new List<GameObject>();
     //private int _lastSelectedChapter = 0;
 
     //Singleton
@@ -71,7 +76,14 @@ public class MenuCtrl : MonoBehaviour
         }
         else
         {
-            AdventureMode();
+            if (DataConfig.IsArcadeMode)
+            {
+                DataConfig.IsArcadeMode = false;
+                OnClickReadyBtn();
+            } else
+            {
+                AdventureMode();
+            }
         }
     }
 
@@ -81,6 +93,7 @@ public class MenuCtrl : MonoBehaviour
         
     }
 
+    #region main game flow
     public void OnClickReadyBtn()
     {
         startScreen.SetActive(false);
@@ -126,15 +139,17 @@ public class MenuCtrl : MonoBehaviour
         int curLv = PlayerPrefs.GetInt(DataConfig.CURRENTLV + chapter, 0);
 
         //remove all level button have in lvsContentParent to spawn new buttons
-        foreach (Transform child in lvsContentParent.transform)
+        foreach(GameObject child in _lvBtnLst)
         {
             Destroy(child);
         }
+        _lvBtnLst.Clear();
 
         //spawn level buttons
         for (int i = 0; i < 100; i++)
         {
             GameObject lv = Instantiate(lvPrefab, lvsContentParent.transform);
+            _lvBtnLst.Add(lv);
             bool isPlayed = (chapter <= _curChap && i <= curLv) ? true : false;
             //int star = PlayerPrefs.GetInt(DataConfig.LV + chapter + i, 0);
             //lv.GetComponent<ButtonLvCtrl>().Init(isPlayed, i + 1, star, )
@@ -153,7 +168,7 @@ public class MenuCtrl : MonoBehaviour
                         lv.GetComponent<ButtonLvCtrl>().Init(isPlayed, i + 1, datas.Datas[i].Star, isfirstPlay);
                     } else
                     {
-                        lv.GetComponent<ButtonLvCtrl>().Init(isPlayed, i + 1, datas.Datas[i].Star, false);
+                        lv.GetComponent<ButtonLvCtrl>().Init(isPlayed, i + 1, 0, false);
                     }
                 }
                 else
@@ -175,8 +190,15 @@ public class MenuCtrl : MonoBehaviour
         chooseModeScreen.SetActive(false);
         levelScreen.SetActive(false);
     }
+
+    public void ShowNotEnoughLifePopup()
+    {
+        notEnoughLifePopup.SetActive(true);
+    }
+    #endregion
 }
 
+[System.Serializable]
 public class PlayedLvData
 {
     public int Star;
@@ -196,7 +218,13 @@ public class PlayedLvData
     }
 }
 
+[System.Serializable]
 public class PlayedLvDatas
 {
-    public List<PlayedLvData> Datas;
+    public List<PlayedLvData> Datas = new List<PlayedLvData>();
+
+    public PlayedLvDatas()
+    {
+        
+    }
 }

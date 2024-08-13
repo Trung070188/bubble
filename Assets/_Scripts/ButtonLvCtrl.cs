@@ -52,13 +52,16 @@ public class ButtonLvCtrl : MonoBehaviour
         {
             life = DataConfig.DEFAULTLIFE;
             PlayerPrefs.SetInt(DataConfig.LIFE, DataConfig.DEFAULTLIFE);
-        } 
+        }
         if (life > 0)
         {
             life--;
             PlayerPrefs.SetInt(DataConfig.LIFE, life);
             DataConfig.SelectedLv = _lv;
             SceneManager.LoadScene(DataConfig.MAINSCENE);
+        } else
+        {
+            MenuCtrl.Instance.ShowNotEnoughLifePopup();
         }
     }
 }

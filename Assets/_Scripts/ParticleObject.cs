@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class ParticleObject : MonoBehaviour
 {
@@ -21,5 +22,14 @@ public class ParticleObject : MonoBehaviour
         other.gameObject.GetComponent<ICollision>()?.HandleCollision(transform);
         Destroy(gameObject);
     }
-    
+
+    private void Update()
+    {
+        Vector3 particleViewportPosition = Camera.main.WorldToViewportPoint(transform.position);
+
+        if (particleViewportPosition.x < 0 || particleViewportPosition.x > 1 || particleViewportPosition.y < 0 || particleViewportPosition.y > 1)
+        {
+            Destroy(gameObject);
+        }
+    }
 }
