@@ -68,6 +68,8 @@ public class GameCtr : Singleton<GameCtr>
 
     private float _timeCheckWinLose = 0.01f;
 
+    private bool _canCheckWinLose = false;
+
     public static GameCtr instance;
 
     [System.Serializable]
@@ -170,9 +172,11 @@ public class GameCtr : Singleton<GameCtr>
 
             if (hit.collider != null)
             {
+                _canCheckWinLose = true;
+
                 //update number click
                 numberClick -= 1;
-                UICtr.instance.NumberClick.text = numberClick.ToString();
+                UICtr.instance.SetNumberClickTxt(numberClick.ToString());
 
                 //progess boom
                 var collider = hit.collider.transform.GetComponent<BubbleObject>();
@@ -187,7 +191,62 @@ public class GameCtr : Singleton<GameCtr>
                     collider.SetBubble();
                 }
 
-                StartCoroutine(CheckWinLose());
+                //StartCoroutine(CheckWinLose());
+            }
+        }
+
+        if (ParticleParent.childCount == 0 && _canCheckWinLose)
+        {
+            _canCheckWinLose = false;
+
+            if (BubbleParent.childCount == 0)
+            {
+                if (!DataConfig.IsArcadeMode)
+                {
+                    //update data
+                    _datas.Datas[DataConfig.SelectedLv].IsPlayed = true;
+                    _datas.Datas[DataConfig.SelectedLv].Star = numberClick + 1;
+
+                    string json = JsonUtility.ToJson(_datas);
+                    File.WriteAllText(path, json);
+
+                    //save total star
+                    PlayerPrefs.SetInt(DataConfig.TOTALSTAR, PlayerPrefs.GetInt(DataConfig.TOTALSTAR, 0) + numberClick + 1);
+
+                    //Chưa đạt tới level cao nhất của chap hiện tại
+                    if (DataConfig.SelectedLv + 1 < 99)
+                    {
+                        if (DataConfig.SelectedLv + 1 > PlayerPrefs.GetInt(DataConfig.CURRENTLV + DataConfig.SelectedChap, 0))
+                        {
+                            PlayerPrefs.SetInt(DataConfig.CURRENTLV + DataConfig.SelectedChap, DataConfig.SelectedLv + 1);
+                        }
+                    }
+                    //Đạt tới lv cao nhất của chap hiện tại, chap hiện tại chưa phải chap cuối
+                    else if (DataConfig.SelectedLv + 1 >= 99 && PlayerPrefs.GetInt(DataConfig.CURRENTCHAPTER, 1) + 1 <= DataConfig.MAXCHAP)
+                    {
+                        if (DataConfig.SelectedChap + 1 > PlayerPrefs.GetInt(DataConfig.CURRENTCHAPTER, 1))
+                        {
+                            PlayerPrefs.SetInt(DataConfig.CURRENTCHAPTER, DataConfig.SelectedChap);
+                            PlayerPrefs.SetInt(DataConfig.CURRENTLV + DataConfig.SelectedChap, 0);
+                        }
+                    }
+                }
+                else
+                {
+                    //update reward data
+                    DataConfig.Streak++;
+                    if (DataConfig.Streak > PlayerPrefs.GetInt(DataConfig.BESTSTREAK, 0))
+                    {
+                        PlayerPrefs.SetInt(DataConfig.BESTSTREAK, DataConfig.Streak);
+                    }
+                }
+                //show win popup
+                Invoke(nameof(ShowWinPopup), _delayShowPopup);
+            }
+            else if (BubbleParent.childCount > 0 && numberClick == 0)
+            {
+                //show lose popup
+                Invoke(nameof(ShowLosePopup), _delayShowPopup);
             }
         }
 
@@ -235,7 +294,7 @@ public class GameCtr : Singleton<GameCtr>
 
     #region Win & Lsoe
 
-    public IEnumerator CheckWinLose()
+    /*public IEnumerator CheckWinLose()
     {
         //yield return new WaitUntil(() => ParticleParent.childCount == 0);
         yield return null;
@@ -288,7 +347,7 @@ public class GameCtr : Singleton<GameCtr>
             //show lose popup
             Invoke(nameof(ShowLosePopup), _delayShowPopup);
         }
-    }
+    }*/
     public void ShowWinPopup()
     {
         if (DataConfig.IsArcadeMode)
@@ -398,6 +457,7 @@ public class GameCtr : Singleton<GameCtr>
     public void OnClickChargeBtn()
     {
         numberClick = DataConfig.DEFAULTARCADECLICKS;
+        UICtr.instance.SetNumberClickTxt(numberClick.ToString());
         loseArcadePopup.SetActive(false);
     }
     #endregion

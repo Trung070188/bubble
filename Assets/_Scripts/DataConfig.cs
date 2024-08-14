@@ -10,12 +10,13 @@ public class DataConfig
 
     //Player prefs
     public const string CURRENTLV = "currentLv";
-    public const string LV = "lv"; //x
     public const string CURRENTCHAPTER = "currentChapter"; 
-    public const string LASTSELECTCHAPTER = "lastSelectChap"; //x
     public const string LIFE = "life";
     public const string TOTALSTAR = "totalStar";
     public const string BESTSTREAK = "bestStreak";
+    public const string SOUND = "sound";
+    public const string MUSIC = "music";
+    public const string VIBRATION = "vibration";
 
     //level Data
     public static int SelectedLv = 0;

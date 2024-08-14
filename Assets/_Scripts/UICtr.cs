@@ -20,4 +20,9 @@ public class UICtr : Singleton<UICtr>
     {
         
     }
+
+    public void SetNumberClickTxt(string text)
+    {
+        NumberClick.text = text;
+    }
 }

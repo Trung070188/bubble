@@ -4,6 +4,7 @@ using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class MenuCtrl : MonoBehaviour
@@ -17,6 +18,9 @@ public class MenuCtrl : MonoBehaviour
 
     [SerializeField]
     private GameObject levelScreen;
+
+    [SerializeField]
+    private GameObject topIcons;
 
     [Space(10)]
     [Header("Select Level")]
@@ -39,6 +43,11 @@ public class MenuCtrl : MonoBehaviour
     private int _curChap = 0;
 
     private List<GameObject> _lvBtnLst = new List<GameObject>();
+
+    [Space(10)]
+    [Header("LeaderBoard")]
+    [SerializeField]
+    private GameObject leaderboard;
     //private int _lastSelectedChapter = 0;
 
     //Singleton
@@ -194,6 +203,22 @@ public class MenuCtrl : MonoBehaviour
     public void ShowNotEnoughLifePopup()
     {
         notEnoughLifePopup.SetActive(true);
+    }
+    #endregion
+
+    #region Bottom button
+    public void OpenLeaderBoard()
+    {
+        startScreen.SetActive(false);
+        chooseModeScreen.SetActive(false);
+        levelScreen.SetActive(false);
+        topIcons.SetActive(false);
+
+        //load data
+
+
+        //show leaderboard
+        leaderboard.SetActive(true);
     }
     #endregion
 }
