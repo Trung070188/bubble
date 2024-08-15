@@ -48,7 +48,33 @@ public class MenuCtrl : MonoBehaviour
     [Header("LeaderBoard")]
     [SerializeField]
     private GameObject leaderboard;
+
+    [SerializeField]
+    private GameObject starBtn;
+
+    [SerializeField]
+    private GameObject firstTryBtn;
+
+    [SerializeField]
+    private GameObject bestStreakBtn;
+
+    [SerializeField]
+    private GameObject playerBtn;
+
+    [SerializeField]
+    private GameObject nationBtn;
+
+    [SerializeField]
+    private GameObject playerItemPrefab;
+
+    [SerializeField]
+    private GameObject nationItemPrefab;
     //private int _lastSelectedChapter = 0;
+
+    /*[Space(10)]
+    [Header("Shop")]
+    [SerializeField]
+*/
 
     //Singleton
     public static MenuCtrl Instance { get; private set; }
@@ -102,7 +128,7 @@ public class MenuCtrl : MonoBehaviour
         
     }
 
-    #region main game flow
+    #region Main game flow
     public void OnClickReadyBtn()
     {
         startScreen.SetActive(false);
@@ -215,12 +241,52 @@ public class MenuCtrl : MonoBehaviour
         topIcons.SetActive(false);
 
         //load data
-
+        LoadDataLeaderBoard(CLASSIFY1.STAR);
 
         //show leaderboard
         leaderboard.SetActive(true);
     }
     #endregion
+
+    #region Leaderboard
+    public void LoadDataLeaderBoard(CLASSIFY1 type1)
+    {
+        switch (type1)
+        {
+            case CLASSIFY1.STAR:
+                DataPlayerNation(CLASSIFY2.PLAYER);
+                break;
+            case CLASSIFY1.FIRSTTRY:
+                break;
+            case CLASSIFY1.BESTSTREAK:
+                break;
+        }
+    }
+
+    public void DataPlayerNation(CLASSIFY2 type2)
+    {
+        switch (type2)
+        {
+            case CLASSIFY2.PLAYER:
+                break;
+            case CLASSIFY2.NATION:
+                break;
+        }
+    }
+    #endregion
+}
+
+public enum CLASSIFY1
+{
+    STAR = 0,
+    FIRSTTRY = 1,
+    BESTSTREAK = 2
+}
+
+public enum CLASSIFY2
+{
+    PLAYER = 0,
+    NATION = 1
 }
 
 [System.Serializable]
