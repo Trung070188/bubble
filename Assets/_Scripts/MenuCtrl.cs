@@ -71,17 +71,40 @@ public class MenuCtrl : MonoBehaviour
     private GameObject nationItemPrefab;
     //private int _lastSelectedChapter = 0;
 
-    /*[Space(10)]
+    [Space(10)]
     [Header("Shop")]
     [SerializeField]
-*/
+    private int maxPage;
+
+    [SerializeField]
+    private Vector3 pageStep;
+
+    [SerializeField]
+    private RectTransform shopPagesRect;
+
+    [SerializeField]
+    private float tweenTime;
+
+    [SerializeField]
+    private LeanTweenType tweenType;
+
+    public List<ShopItemSO> ShopItemSOs = new List<ShopItemSO>();
+
+    private int _currentPage;
+
+    private Vector3 _targetPos;
 
     //Singleton
     public static MenuCtrl Instance { get; private set; }
 
     private void Awake()
     {
+        //singleton
         Instance = this;
+
+        //swipe shop
+        _currentPage = 1;
+        _targetPos = shopPagesRect.localPosition;
     }
 
     // Start is called before the first frame update
@@ -273,6 +296,37 @@ public class MenuCtrl : MonoBehaviour
                 break;
         }
     }
+    #endregion
+
+    #region Shop
+    //swipe shop
+    public void Next()
+    {
+        if (_currentPage < maxPage)
+        {
+            _currentPage++;
+            _targetPos += pageStep;
+            MovePage();
+        }
+    }
+
+    public void Previous()
+    {
+        if (_currentPage > 1)
+        {
+            _currentPage--;
+            _targetPos -= pageStep;
+            MovePage();
+        }
+    }
+
+    public void MovePage()
+    {
+        shopPagesRect.LeanMoveLocal(_targetPos, tweenTime).setEase(tweenType);
+    }
+
+    //Load Shop Data
+
     #endregion
 }
 
