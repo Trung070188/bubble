@@ -11,15 +11,26 @@ public class APIDataType
         public bool success;
         public string message;
         public int code;
-        public Data data;
+        public DataLogin data;
 
     }
 
     [Serializable]
-    public class Data
+    public class DataLogin
     {
-        public string id;
-        public string access_token;
-        public string userName;
+        public string Id;
+        public string Access_token;
+        public string UserName;
+    }
+
+    public class UserInfo
+    {
+        public string Id;
+        public string UserName;
+        public Sprite AvtImg;
+        public int TotalStar;
+        public int Coin;
+        public int Life;
+        public int BestStreak;
     }
 }

@@ -1,7 +1,8 @@
+using Nami.Leaderboard;
 using Newtonsoft.Json;
 using System;
 
-public class API 
+public static class API 
 {
     #region Base Account
     public static void Login(string json, Action onDone, Action onFail)
@@ -31,6 +32,21 @@ public class API
         }, null, (res) =>
         {
             onFail?.Invoke(res);
+        });
+    }
+    #endregion
+
+    #region Leaderboard
+    public static void GetLeaderboardWithEndPoint(string endpoint, Action<LeaderboardPlayer> onDone, Action onFail)
+    {
+        APIRequest.Call(endpoint, "", EndPoints.GET, "", (res) =>
+        {
+            var leaderboardData = JsonConvert.DeserializeObject<DataAPI<LeaderboardPlayer>>(res);
+            onDone?.Invoke(leaderboardData.data);
+        },
+        (x) =>
+        {
+            onFail?.Invoke();
         });
     }
     #endregion

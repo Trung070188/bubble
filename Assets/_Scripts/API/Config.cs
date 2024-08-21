@@ -15,7 +15,7 @@ public class Config : Singleton<Config>
             {
                 return String.Empty;
             }
-            return UserData.data == null ? String.Empty : UserData.data.access_token;
+            return UserData.data == null ? String.Empty : UserData.data.Access_token;
         }
     }
 }

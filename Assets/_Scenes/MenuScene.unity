@@ -3603,6 +3603,7 @@ MonoBehaviour:
   shopPagesRect: {fileID: 2006513586}
   tweenTime: 0.3
   tweenType: 6
+  ShopItemSOs: []
 --- !u!1 &751455689
 GameObject:
   m_ObjectHideFlags: 0

@@ -264,7 +264,7 @@ public class MenuCtrl : MonoBehaviour
         topIcons.SetActive(false);
 
         //load data
-        LoadDataLeaderBoard(CLASSIFY1.STAR);
+        LoadDataLeaderBoard(CATEGORY.STAR);
 
         //show leaderboard
         leaderboard.SetActive(true);
@@ -272,27 +272,27 @@ public class MenuCtrl : MonoBehaviour
     #endregion
 
     #region Leaderboard
-    public void LoadDataLeaderBoard(CLASSIFY1 type1)
+    public void LoadDataLeaderBoard(CATEGORY category)
     {
-        switch (type1)
+        switch (category)
         {
-            case CLASSIFY1.STAR:
-                DataPlayerNation(CLASSIFY2.PLAYER);
+            case CATEGORY.STAR:
+                DataPlayerNation(CLASSIFY.PLAYER);
                 break;
-            case CLASSIFY1.FIRSTTRY:
+            case CATEGORY.FIRSTTRY:
                 break;
-            case CLASSIFY1.BESTSTREAK:
+            case CATEGORY.BESTSTREAK:
                 break;
         }
     }
 
-    public void DataPlayerNation(CLASSIFY2 type2)
+    public void DataPlayerNation(CLASSIFY classify)
     {
-        switch (type2)
+        switch (classify)
         {
-            case CLASSIFY2.PLAYER:
+            case CLASSIFY.PLAYER:
                 break;
-            case CLASSIFY2.NATION:
+            case CLASSIFY.NATION:
                 break;
         }
     }
@@ -330,14 +330,14 @@ public class MenuCtrl : MonoBehaviour
     #endregion
 }
 
-public enum CLASSIFY1
+public enum CATEGORY
 {
     STAR = 0,
     FIRSTTRY = 1,
     BESTSTREAK = 2
 }
 
-public enum CLASSIFY2
+public enum CLASSIFY
 {
     PLAYER = 0,
     NATION = 1
