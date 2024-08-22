@@ -63,12 +63,6 @@ public class MenuCtrl : MonoBehaviour
 
     [SerializeField]
     private GameObject nationBtn;
-
-    [SerializeField]
-    private GameObject playerItemPrefab;
-
-    [SerializeField]
-    private GameObject nationItemPrefab;
     //private int _lastSelectedChapter = 0;
 
     [Space(10)]

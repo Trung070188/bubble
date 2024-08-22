@@ -22,26 +22,40 @@ namespace Nami.Leaderboard
     public class LeaderboardPlayer
     {
         public List<LeaderboardPlayerData> PlayerDatas;
-        public LeaderboardPlayerData CurrentPlaterData;
+        public LeaderboardPlayerData CurrentPlayerData;
     }
 
     [Serializable]
     public class LeaderboardPlayerData
     {
-        public string Id;
+        public string UserId;
+        public int RankIndex;
         public string Username;
         public int NationId;
         public string ImgUrl;
+        public int Point;
     }
 
     [Serializable]
     public class LeaderboardNationData
     {
         public string IdNation;
+        public int Point;
     }
 
     public class LeaderboardDataManager : MonoBehaviour
     {
-        //public void GetLeaderboardByCategory()
+        public void GetPlayerLeaderboardByCategory(string endpoint, Action<List<LeaderboardPlayerData>, LeaderboardPlayerData> onDone)
+        {
+            API.GetPlayerLeaderboardWithEndPoint(endpoint, (data) =>
+            {
+                
+            }, null);
+        }
+
+        private List<LeaderboardPlayerData> GetUsersDataInit(LeaderboardPlayer dataReceive)
+        {
+            var 
+        }
     }
 }

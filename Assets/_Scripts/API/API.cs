@@ -37,7 +37,7 @@ public static class API
     #endregion
 
     #region Leaderboard
-    public static void GetLeaderboardWithEndPoint(string endpoint, Action<LeaderboardPlayer> onDone, Action onFail)
+    public static void GetPlayerLeaderboardWithEndPoint(string endpoint, Action<LeaderboardPlayer> onDone, Action onFail)
     {
         APIRequest.Call(endpoint, "", EndPoints.GET, "", (res) =>
         {
