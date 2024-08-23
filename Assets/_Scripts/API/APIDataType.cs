@@ -12,7 +12,6 @@ public class APIDataType
         public string message;
         public int code;
         public DataLogin data;
-
     }
 
     [Serializable]
@@ -25,12 +24,30 @@ public class APIDataType
 
     public class UserInfo
     {
-        public string Id;
+        public string DeviceId;
         public string UserName;
         public Sprite AvtImg;
         public int TotalStar;
         public int Coin;
         public int Life;
         public int BestStreak;
+        public EquipmentInfo Equipment;
+
+        public UserInfo()
+        {
+            
+        }
+
+        public UserInfo(string id, string userName, Sprite avtImg, int totalStar, int coin, int life, int bestStreak, EquipmentInfo equipment)
+        {
+            DeviceId = id;
+            UserName = userName;
+            AvtImg = avtImg;
+            TotalStar = totalStar;
+            Coin = coin;
+            Life = life;
+            BestStreak = bestStreak;
+            Equipment = equipment;
+        }
     }
 }

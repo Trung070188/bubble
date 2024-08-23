@@ -5,41 +5,19 @@ using System;
 public static class API 
 {
     #region Base Account
-    public static void Login(string json, Action onDone, Action onFail)
+    public static void InitAndGetDataUser(string deviceId, Action<APIDataType.UserInfo> onDone, Action onFail)
     {
-        var isTimeOut = false;
-        APIRequest.Call(EndPoints.LOGIN, EndPoints.POST, json, (res) =>
-        {
-            if (isTimeOut) return;
-            var response = JsonConvert.DeserializeObject<APIDataType.MessageDetails>(res);
-            if (!response.success)
-            {
-                //fail login
-                onFail?.Invoke();
-            } else
-            {
-                Config.instance.UserData = response;
+        //push device id
 
-            }
-        });
-    }
+        //if have this id, get user data from server
 
-    public static void Register(string body, Action onDone = null, Action<string> onFail = null)
-    {
-        APIRequest.Call(EndPoints.REGISTER, EndPoints.POST, body, (res) =>
-        {
-            onDone?.Invoke();
-        }, null, (res) =>
-        {
-            onFail?.Invoke(res);
-        });
     }
     #endregion
 
     #region Leaderboard
     public static void GetPlayerLeaderboardWithEndPoint(string endpoint, Action<LeaderboardPlayer> onDone, Action onFail)
     {
-        APIRequest.Call(endpoint, "", EndPoints.GET, "", (res) =>
+        APIRequest.Call(endpoint, EndPoints.GET, (res) =>
         {
             var leaderboardData = JsonConvert.DeserializeObject<DataAPI<LeaderboardPlayer>>(res);
             onDone?.Invoke(leaderboardData.data);
@@ -48,6 +26,30 @@ public static class API
         {
             onFail?.Invoke();
         });
+    }
+
+    public static void GetNationLeaderboardWithEndPoint(string endpoint, Action<LeaderboardNation> onDone, Action onFail)
+    {
+        APIRequest.Call(endpoint, EndPoints.GET, (res) =>
+        {
+            var leaderboardData = JsonConvert.DeserializeObject<DataAPI<LeaderboardNation>>(res);
+            onDone?.Invoke(leaderboardData.data);
+        },
+        (x) =>
+        {
+            onFail?.Invoke();
+        });
+    }
+    #endregion
+
+    #region Shop
+    public static void GetShopItemData()
+    {
+
+    }
+    public static void BuyItemInShop()
+    {
+
     }
     #endregion
 }

@@ -18,4 +18,6 @@ public class Config : Singleton<Config>
             return UserData.data == null ? String.Empty : UserData.data.Access_token;
         }
     }
+
+    public APIDataType.UserInfo UserInfo { get; set; }
 }

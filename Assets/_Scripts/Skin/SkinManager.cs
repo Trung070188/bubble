@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GlobalCtrl : MonoBehaviour
+public class SkinManager : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -15,12 +15,10 @@ public class GlobalCtrl : MonoBehaviour
     {
         
     }
+}
 
-    public void InitAndGetUserData()
-    {
-        API.InitAndGetDataUser(SystemInfo.deviceUniqueIdentifier, (res) =>
-        {
-            Config.instance.UserInfo = res;
-        }, null);
-    }
+[System.Serializable]
+public class EquipmentInfo
+{
+
 }

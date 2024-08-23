@@ -11,4 +11,5 @@ public class EndPoints
     //base account
     public static string LOGIN = "";
     public static string REGISTER = "";
+    public static string GET_USER_INFO = "";
 }

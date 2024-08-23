@@ -43,19 +43,51 @@ namespace Nami.Leaderboard
         public int Point;
     }
 
+    [Serializable]
+    public class LeaderboardNation
+    {
+        public List<LeaderboardNationData> NationDatas;
+    }
+
     public class LeaderboardDataManager : MonoBehaviour
     {
+        //get leaderboard data for player by category
         public void GetPlayerLeaderboardByCategory(string endpoint, Action<List<LeaderboardPlayerData>, LeaderboardPlayerData> onDone)
         {
             API.GetPlayerLeaderboardWithEndPoint(endpoint, (data) =>
             {
-                
+                var users = GetUsersDataInit(data);
+                var current = GetCurrentUserData(data);
+                onDone?.Invoke(users, current);
             }, null);
         }
 
+        //for all other user
         private List<LeaderboardPlayerData> GetUsersDataInit(LeaderboardPlayer dataReceive)
         {
-            var 
+            return dataReceive.PlayerDatas;
+        }
+
+        //for current user
+        private LeaderboardPlayerData GetCurrentUserData(LeaderboardPlayer dataReceive)
+        {
+            return dataReceive.CurrentPlayerData;
+        }
+
+        //get leaderboard data for nation by category
+        public void GetNationLeaderboardByCategory(string endpoint, Action<List<LeaderboardNationData>> onDone)
+        {
+            API.GetNationLeaderboardWithEndPoint(endpoint, (data) =>
+            {
+                var datas = GetNationDataInit(data);
+                onDone?.Invoke(datas);
+            }, null);
+        }
+
+        //convert nation data
+        private List<LeaderboardNationData> GetNationDataInit(LeaderboardNation dataReceive)
+        {
+            return dataReceive.NationDatas;
         }
     }
 }

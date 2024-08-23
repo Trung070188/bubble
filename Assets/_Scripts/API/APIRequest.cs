@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Unity.Mathematics;
+using System.Collections.Generic;
 
 public class APIRequest
 {
@@ -39,7 +40,9 @@ public class APIRequest
         }
     }
 
-    public static void Call(string endPoint, string extend, string method, string postData = "",
+    //public APIRequest(string endpoint, string extend = "", )
+
+    public static void Call(string endPoint, string extend, string method, string postData,
         Action<string> onSuccess = null, Action<byte[]> onResponseData = null, Action<string> onFail = null, int timeout = TIMEOUTDEFAULTPARAMETER, Action onTimeout = null)
     {
         _ = new APIRequest(endPoint, extend, method, postData, timeout: timeout)
