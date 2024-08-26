@@ -20,5 +20,14 @@ public class SkinManager : MonoBehaviour
 [System.Serializable]
 public class EquipmentInfo
 {
+    public int ItemId;
+    public BodyPositionEnum BodyPosition;
+}
 
+public enum BodyPositionEnum
+{
+    GLASS = 0,
+    GLOVES,
+    BODY,
+    BOOTS
 }

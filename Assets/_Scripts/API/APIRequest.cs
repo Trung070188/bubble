@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Unity.Mathematics;
 using System.Collections.Generic;
+using System.Net;
 
 public class APIRequest
 {
@@ -16,7 +17,7 @@ public class APIRequest
 
     protected UnityWebRequest _request;
 
-    public APIRequest(string endPoint, string extend = "", string method = "", string postData = "", int timeout = TIMEOUTDEFAULTPARAMETER)
+    /*public APIRequest(string endPoint, string extend = "", string method = "", string postData = "", int timeout = TIMEOUTDEFAULTPARAMETER)
     {
         _url_base = Constants.URL_BASE;
 
@@ -38,14 +39,31 @@ public class APIRequest
         {
             _request.SetRequestHeader("Authorization", "Bearer " + bearerToken);
         }
+    }*/
+
+    public APIRequest(Dictionary<string, string> postData, string endPoint, string extend = "", string method = "", int timeout = TIMEOUTDEFAULTPARAMETER)
+    {
+        _url_base = Constants.URL_BASE;
+
+        _request = new UnityWebRequest(_url_base + endPoint + extend, method);
+        if (timeout == TIMEOUTDEFAULTPARAMETER) _request.timeout = TIMEOUTDEFAULT;
+
+        if (postData != null || postData.Count > 0)
+        {
+            WWWForm form = new WWWForm();
+            foreach (KeyValuePair<string, string> data in postData)
+            {
+                form.AddField(data.Key, data.Value);
+            }
+            _request = UnityWebRequest.Post(_url_base + endPoint + extend, form);
+        }
+        _request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
     }
 
-    //public APIRequest(string endpoint, string extend = "", )
-
-    public static void Call(string endPoint, string extend, string method, string postData,
+    public static void Call(string endPoint, string extend, string method, Dictionary<string, string> postData,
         Action<string> onSuccess = null, Action<byte[]> onResponseData = null, Action<string> onFail = null, int timeout = TIMEOUTDEFAULTPARAMETER, Action onTimeout = null)
     {
-        _ = new APIRequest(endPoint, extend, method, postData, timeout: timeout)
+        _ = new APIRequest(postData, endPoint, extend, method, timeout: timeout)
             .Send((res) =>
             {
                 var log = string.Format("API <color=#AD70EF> {0} </color> --- receive data: {1}", endPoint, JsonConvert.SerializeObject(res))
@@ -74,10 +92,10 @@ public class APIRequest
             });
     }
 
-    public static void Call(string endPoint, string method, string postData, Action<string> onSuccess = null,
+    public static void Call(string endPoint, string method, Dictionary<string, string> postData, Action<string> onSuccess = null,
         Action<byte[]> onResponseData = null, Action<string> onFail = null, int timeout = TIMEOUTDEFAULTPARAMETER, Action onTimeout = null)
     {
-        _ = new APIRequest(endPoint, "", method, postData, timeout: timeout)
+        _ = new APIRequest(postData, endPoint, "", method, timeout: timeout)
             .Send((res) =>
             {
                 var log = string.Format("API <color=#AD70EF> {0} </color> --- receive data: {1}", endPoint, JsonConvert.SerializeObject(res))
@@ -98,6 +116,38 @@ public class APIRequest
                     var response = JsonConvert.DeserializeObject<APIDataType.MessageDetails>(res.Response);
 
 
+                    if (onFail == null)
+                    {
+                        Debug.Log(response.message);
+                    }
+                    else
+                        onFail.Invoke(response.message);
+                }
+            });
+    }
+    public static void Call(string endPoint, string extend, string method,
+        Action<string> onSuccess = null, Action<byte[]> onResponseData = null, Action<string> onFail = null, int timeout = TIMEOUTDEFAULTPARAMETER, Action onTimeout = null)
+    {
+        Dictionary<string, string> temp = new Dictionary<string, string>();
+        _ = new APIRequest(temp, endPoint, extend, method, timeout: timeout)
+            .Send((res) =>
+            {
+                var log = string.Format("API <color=#AD70EF> {0} </color> --- receive data: {1}", endPoint, JsonConvert.SerializeObject(res))
+                    .Replace("\\", "");
+                Debug.Log(log);
+                if (res.ResponseCode == Constants.SUCCESS_CODE)
+                {
+                    onResponseData?.Invoke(res.ResponseData);
+                    onSuccess?.Invoke(res.Response);
+                }
+                else
+                {
+                    if (res.ResponseCode == Constants.TIME_OUT_REQUEST || CheckTimeout(res))
+                    {
+                        onTimeout?.Invoke();
+                        return;
+                    }
+                    var response = JsonConvert.DeserializeObject<APIDataType.MessageDetails>(res.Response);
                     if (onFail == null)
                     {
                         Debug.Log(response.message);
@@ -111,7 +161,8 @@ public class APIRequest
     public static void Call(string endPoint, string method, Action<string> onSuccess = null,
         Action<byte[]> onResponseData = null, Action<string> onFail = null, int timeout = TIMEOUTDEFAULTPARAMETER, Action onTimeout = null)
     {
-        _ = new APIRequest(endPoint, "", method, "", timeout: timeout)
+        Dictionary<string, string> temp = new Dictionary<string, string>();
+        _ = new APIRequest(temp, endPoint, "", method, timeout: timeout)
             .Send((res) =>
             {
                 var log = string.Format("API <color=#AD70EF> {0} </color> --- receive data: {1}", endPoint, JsonConvert.SerializeObject(res))
@@ -140,9 +191,9 @@ public class APIRequest
             });
     }
 
-    public static async Task<APIRequest> CallAsync(string method, string endPoint, string postData = "")
+    public static async Task<APIRequest> CallAsync(string method, string endPoint, Dictionary<string, string> postData)
     {
-        return await (new APIRequest(endPoint, "", method, postData)).Send();
+        return await (new APIRequest(postData, endPoint, "", method)).Send();
     }
 
     public async Task<APIRequest> Send(System.Action<APIRequest> onDone = null)

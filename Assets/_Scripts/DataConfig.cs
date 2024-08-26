@@ -35,4 +35,8 @@ public class DataConfig
     //Mode
     public static bool IsArcadeMode = false;
     public static int Streak = 0;
+
+    //data
+    public static bool IsLoadUserDatas = true;
+    public static bool IsLoadLvDatas = true;
 }

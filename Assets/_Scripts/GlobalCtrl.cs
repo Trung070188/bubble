@@ -15,12 +15,4 @@ public class GlobalCtrl : MonoBehaviour
     {
         
     }
-
-    public void InitAndGetUserData()
-    {
-        API.InitAndGetDataUser(SystemInfo.deviceUniqueIdentifier, (res) =>
-        {
-            Config.instance.UserInfo = res;
-        }, null);
-    }
 }

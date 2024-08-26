@@ -99,20 +99,23 @@ public class MenuCtrl : MonoBehaviour
         //swipe shop
         _currentPage = 1;
         _targetPos = shopPagesRect.localPosition;
+
+        //get user info
+        
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        _curChap = PlayerPrefs.GetInt(DataConfig.CURRENTCHAPTER, -1);
+        //_curChap = PlayerPrefs.GetInt(DataConfig.CURRENTCHAPTER, -1);
 
         //set playerpref default
-        if (_curChap == -1)
+        /*if (_curChap == -1)
         {
             PlayerPrefs.SetInt(DataConfig.CURRENTCHAPTER, 1);
             PlayerPrefs.SetInt(DataConfig.CURRENTLV + "1", 0);
             _curChap = 1;
-        }
+        }*/
 
         //_lastSelectedChapter = PlayerPrefs.GetInt(DataConfig.LASTSELECTCHAPTER, 1);
 
@@ -144,6 +147,20 @@ public class MenuCtrl : MonoBehaviour
     {
         
     }
+
+    #region Get Data
+    public void InitAndGetUserData()
+    {
+        if (DataConfig.IsLoadUserDatas)
+        {
+            API.InitAndGetDataUser(SystemInfo.deviceUniqueIdentifier, () =>
+            {
+                _curChap = Config.instance.UserInfo.CurChap;
+
+            }, null);
+        }
+    }
+    #endregion
 
     #region Main game flow
     public void OnClickReadyBtn()

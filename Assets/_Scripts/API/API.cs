@@ -1,15 +1,27 @@
 using Nami.Leaderboard;
 using Newtonsoft.Json;
 using System;
+using UnityEngine.Networking;
 
 public static class API 
 {
     #region Base Account
-    public static void InitAndGetDataUser(string deviceId, Action<APIDataType.UserInfo> onDone, Action onFail)
+    public static void InitAndGetDataUser(string deviceId, Action onDone, Action onFail)
     {
         //push device id
-
-        //if have this id, get user data from server
+        APIRequest.Call(EndPoints.GET_USER_INFO, deviceId, EndPoints.GET, (res) =>
+        {
+            //Get user data from server
+            var responseInfo = JsonConvert.DeserializeObject<DataAPI<APIDataType.UserInfo>>(res);
+            Config.instance.UserInfo = responseInfo.data;
+            if (onDone != null)
+            {
+                onDone.Invoke();
+            }
+        }, null, (x) => 
+        { 
+            onFail?.Invoke();
+        });
 
     }
     #endregion
@@ -21,7 +33,7 @@ public static class API
         {
             var leaderboardData = JsonConvert.DeserializeObject<DataAPI<LeaderboardPlayer>>(res);
             onDone?.Invoke(leaderboardData.data);
-        },
+        }, null,
         (x) =>
         {
             onFail?.Invoke();
@@ -34,7 +46,7 @@ public static class API
         {
             var leaderboardData = JsonConvert.DeserializeObject<DataAPI<LeaderboardNation>>(res);
             onDone?.Invoke(leaderboardData.data);
-        },
+        }, null,
         (x) =>
         {
             onFail?.Invoke();

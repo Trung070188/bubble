@@ -6,7 +6,7 @@ using UnityEngine;
 public class Config : Singleton<Config>
 {
     // userData
-    public APIDataType.MessageDetails UserData { get; set; }
+    /*public APIDataType.MessageDetails UserData { get; set; }
     public string AccessToken
     {
         get
@@ -17,7 +17,9 @@ public class Config : Singleton<Config>
             }
             return UserData.data == null ? String.Empty : UserData.data.Access_token;
         }
-    }
+    }*/
 
     public APIDataType.UserInfo UserInfo { get; set; }
+
+    public APIDataType.LevelData LevelData { get; set; }
 }

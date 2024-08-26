@@ -4,12 +4,9 @@ using UnityEngine;
 
 public class Constants : MonoBehaviour
 {
-    public static string URL_BASE = "https://api.pokeafk.online/api/v1/";
-
-    public static string API_TOKEN = "";
+    public static string URL_BASE = "https://api.pokeafk.online/server-h7/";
 
     //key
     public static int SUCCESS_CODE = 200;
     public static int TIME_OUT_REQUEST = 0;
-
 }
