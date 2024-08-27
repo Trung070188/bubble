@@ -19,7 +19,43 @@ public class Config : Singleton<Config>
         }
     }*/
 
-    public APIDataType.UserInfo UserInfo { get; set; }
+    #region User Data
+    public APIDataType.User User { get; set; }
 
-    public APIDataType.LevelData LevelData { get; set; }
+    public void SetUser(APIDataType.User user)
+    {
+        User = user;
+    }
+
+    public APIDataType.User GetUser()
+    {
+        return User;
+    }
+
+    public APIDataType.UserData UserData { get; set; }
+
+    public void SetUserData(APIDataType.UserData user)
+    {
+        UserData = user;
+    }
+
+    public APIDataType.UserData GetUserData()
+    {
+        return UserData;
+    }
+    #endregion
+
+    #region Level
+    public APIDataType.LevelDatas LevelData { get; set; }
+
+    public void SetLevelData(APIDataType.LevelDatas levelData)
+    {
+        LevelData = levelData;
+    }
+
+    public APIDataType.LevelDatas GetLevelData()
+    {
+        return LevelData;
+    }
+    #endregion
 }

@@ -46,16 +46,18 @@ public class APIRequest
         _url_base = Constants.URL_BASE;
 
         _request = new UnityWebRequest(_url_base + endPoint + extend, method);
+        Debug.Log($"domain: {_url_base + endPoint + extend}");
         if (timeout == TIMEOUTDEFAULTPARAMETER) _request.timeout = TIMEOUTDEFAULT;
 
-        if (postData != null || postData.Count > 0)
+        if (postData.Count > 0)
         {
             WWWForm form = new WWWForm();
             foreach (KeyValuePair<string, string> data in postData)
             {
                 form.AddField(data.Key, data.Value);
             }
-            _request = UnityWebRequest.Post(_url_base + endPoint + extend, form);
+
+             
         }
         _request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
     }
@@ -180,7 +182,7 @@ public class APIRequest
                         onTimeout?.Invoke();
                         return;
                     }
-                    var response = JsonConvert.DeserializeObject<APIDataType.MessageDetails>(res.Response);
+                    var response = JsonConvert.DeserializeObject<APIDataType.      MessageDetails>(res.Response);
                     if (onFail == null)
                     {
                         Debug.Log(response.message);

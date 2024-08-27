@@ -101,7 +101,7 @@ public class MenuCtrl : MonoBehaviour
         _targetPos = shopPagesRect.localPosition;
 
         //get user info
-        
+        GetData();
     }
 
     // Start is called before the first frame update
@@ -149,15 +149,22 @@ public class MenuCtrl : MonoBehaviour
     }
 
     #region Get Data
-    public void InitAndGetUserData()
+    public void GetData()
     {
         if (DataConfig.IsLoadUserDatas)
         {
-            API.InitAndGetDataUser(SystemInfo.deviceUniqueIdentifier, () =>
+            API.InitAndGetInfoUser(SystemInfo.deviceUniqueIdentifier, (res) =>
             {
-                _curChap = Config.instance.UserInfo.CurChap;
-
+                DataConfig.IsLoadUserDatas = false;
+                _curChap = res.CurChap;
+                Debug.Log(res);
             }, null);
+        }
+
+        //load level data
+        if (DataConfig.IsLoadLvDatas)
+        {
+            //API.GetLevelData()
         }
     }
     #endregion

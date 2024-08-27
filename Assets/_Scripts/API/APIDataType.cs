@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class APIDataType 
 {
@@ -11,21 +9,13 @@ public class APIDataType
         public bool success;
         public string message;
         public int code;
-        public DataLogin data;
+        public User data;
     }
 
     [Serializable]
-    public class DataLogin
+    public class UserData
     {
-        public string Id;
-        public string Access_token;
-        public string UserName;
-    }
-
-    public class UserInfo
-    {
-        public string DeviceId;
-        public string UserName;
+        public int UserId;
         public int AvtImgId;
         public int TotalStar;
         public int Coin;
@@ -37,35 +27,42 @@ public class APIDataType
         public int CurChap;
         public int CurLv;
 
-        public UserInfo()
+        public UserData()
         {
             
         }
+    }
 
-        public UserInfo(string id, string userName, int avtImgId, int totalStar, int coin, int life, int bestStreak, EquipmentInfo equipment, int curChap, int curLv)
-        {
-            DeviceId = id;
-            UserName = userName;
-            AvtImgId = avtImgId;
-            TotalStar = totalStar;
-            Coin = coin;
-            Life = life;
-            BestStreak = bestStreak;
-            Equipment = equipment;
-            CurChap = curChap;
-            CurLv = curLv;
-        }
+    [Serializable]
+    public class User
+    {
+        public string DeviceId;
+        public string UserName;
+        public int UserId;
+        public int AvtImgId;
+        public int TotalStar;
+        public int Coin;
+        public int Life;
+        public int BestStreak;
+
+        public EquipmentInfo Equipment;
+
+        public int CurChap;
+        public int CurLv;
     }
 
     #region Level Data
+    [Serializable]
     public class LevelData
     {
+        public int UserId;
         public int Level;
         public int Chap;
         public int NumberTries;
         public int Star;
     }
 
+    [Serializable]
     public class LevelDatas
     {
         public List<LevelData> Datas;
