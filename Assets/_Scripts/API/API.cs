@@ -1,6 +1,7 @@
 using Nami.Leaderboard;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class API 
@@ -11,19 +12,29 @@ public static class API
         //push device id
         APIRequest.Call(EndPoints.GET_USER_INFO, deviceId, EndPoints.GET, (res) =>
         {
+            Debug.Log($"res: {res}");
             try
             {
                 //Get user Information from server
                 var responseInfo = JsonConvert.DeserializeObject<DataAPI<APIDataType.User>>(res);
-                Config.instance.User = responseInfo.data;
+                Config.Instance.SetUser(responseInfo.data);
+                onDone?.Invoke(responseInfo.data);
             }
             catch (Exception e)
             {
-                Debug.LogError(e.Message);
+                Debug.LogError("error");
             }
         }, null, (x) => 
         { 
             onFail?.Invoke();
+        });
+    }
+
+    public static void UpdateUserData(Dictionary<string, string> updateData, string id, Action onDone = null, Action onFail = null)
+    {
+        APIRequest.Call(EndPoints.UPDATE_USER_DATA, id, EndPoints.PUT, updateData, (res) =>
+        {
+            onDone?.Invoke();
         });
     }
 
@@ -55,8 +66,8 @@ public static class API
         {
             try
             {
-                var response = JsonConvert.DeserializeObject<DataAPI<APIDataType.LevelDatas>>(res);
-                Config.instance.LevelData = response.data;
+                var response = JsonConvert.DeserializeObject<APIDataType.LevelDatas>(res);
+                Config.Instance.LevelData = response;
                 onDone?.Invoke();
             } catch (Exception e)
             {
@@ -74,8 +85,8 @@ public static class API
     {
         APIRequest.Call(endpoint, EndPoints.GET, (res) =>
         {
-            var leaderboardData = JsonConvert.DeserializeObject<DataAPI<LeaderboardPlayer>>(res);
-            onDone?.Invoke(leaderboardData.data);
+            var leaderboardData = JsonConvert.DeserializeObject<LeaderboardPlayer>(res);
+            onDone?.Invoke(leaderboardData);
         }, null,
         (x) =>
         {
@@ -87,8 +98,8 @@ public static class API
     {
         APIRequest.Call(endpoint, EndPoints.GET, (res) =>
         {
-            var leaderboardData = JsonConvert.DeserializeObject<DataAPI<LeaderboardNation>>(res);
-            onDone?.Invoke(leaderboardData.data);
+            var leaderboardData = JsonConvert.DeserializeObject<LeaderboardNation>(res);
+            onDone?.Invoke(leaderboardData);
         }, null,
         (x) =>
         {

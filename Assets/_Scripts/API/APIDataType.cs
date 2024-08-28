@@ -15,7 +15,7 @@ public class APIDataType
     [Serializable]
     public class UserData
     {
-        public int UserId;
+        public readonly int UserId;
         public int AvtImgId;
         public int TotalStar;
         public int Coin;
@@ -36,19 +36,20 @@ public class APIDataType
     [Serializable]
     public class User
     {
-        public string DeviceId;
-        public string UserName;
-        public int UserId;
-        public int AvtImgId;
-        public int TotalStar;
-        public int Coin;
-        public int Life;
-        public int BestStreak;
+        public int id;
+        public string username;
+        public string device_uid;
+        public int avt_image_id;
+        public int coin;
+        public int best_streak;
+        public int cur_chap;
+        public int cur_level;
 
-        public EquipmentInfo Equipment;
+        public int total_star;
+        public int life;
+        public int user_data_id;
 
-        public int CurChap;
-        public int CurLv;
+        public EquipmentInfo equipment;
     }
 
     #region Level Data

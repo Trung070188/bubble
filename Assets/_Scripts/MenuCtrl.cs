@@ -1,11 +1,14 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
+using static System.Net.WebRequestMethods;
 
 public class MenuCtrl : MonoBehaviour
 {
@@ -40,7 +43,7 @@ public class MenuCtrl : MonoBehaviour
 
     public Sprite NotPlaySprite;
 
-    private int _curChap = 0;
+    private int _curChap = -1;
 
     private List<GameObject> _lvBtnLst = new List<GameObject>();
 
@@ -102,6 +105,7 @@ public class MenuCtrl : MonoBehaviour
 
         //get user info
         GetData();
+        //StartCoroutine(Test());
     }
 
     // Start is called before the first frame update
@@ -156,8 +160,14 @@ public class MenuCtrl : MonoBehaviour
             API.InitAndGetInfoUser(SystemInfo.deviceUniqueIdentifier, (res) =>
             {
                 DataConfig.IsLoadUserDatas = false;
-                _curChap = res.CurChap;
-                Debug.Log(res);
+                _curChap = res.cur_chap;
+                res.life = 30;
+                Dictionary<string, string> temp = new Dictionary<string, string>();
+                temp.Add(nameof(res.life), res.life.ToString());
+                API.UpdateUserData(temp, res.user_data_id.ToString(), () =>
+                {
+                    API.InitAndGetInfoUser(SystemInfo.deviceUniqueIdentifier);
+                });
             }, null);
         }
 
@@ -165,6 +175,61 @@ public class MenuCtrl : MonoBehaviour
         if (DataConfig.IsLoadLvDatas)
         {
             //API.GetLevelData()
+        }
+    }
+
+    public IEnumerator Test()
+    {
+        using (UnityWebRequest www = UnityWebRequest.Get("https://api.pokeafk.onlineapi/users/info/" + SystemInfo.deviceUniqueIdentifier))
+        {
+            Debug.Log($"domain: {"https://api.pokeafk.online/api/users/info/" + SystemInfo.deviceUniqueIdentifier}");
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("Lỗi khi gọi API: " + www.error);
+            }
+            else
+            {
+                string responseText = www.downloadHandler.text;
+                Debug.Log("Phản hồi từ server: " + responseText);
+                try
+                {
+                    Debug.Log(responseText);
+                    /*BankAllResponse bankResponse = JsonConvert.DeserializeObject<BankAllResponse>(responseText);
+
+                    if (bankResponse != null && bankResponse.data != null)
+                    {
+                        DataStore.Instance.SetBankAll(bankResponse.data);
+
+                        listBankAll.ClearOptions();
+
+
+                        List<TMP_Dropdown.OptionData> newOptions = new List<TMP_Dropdown.OptionData>();
+
+                        foreach (var bank in bankResponse.data)
+                        {
+                            newOptions.Add(new TMP_Dropdown.OptionData(bank.shortName));
+                        }
+
+                        listBankAll.AddOptions(newOptions);
+
+                        listBank.value = 1;
+                        listBank.RefreshShownValue();
+                        OnBankSelectedAll(0);
+
+                        Debug.Log($"Số lượng ngân hàng: {bankResponse.data.Count}");
+                    }
+                    else
+                    {
+                        Debug.LogError("Không thể parse dữ liệu ngân hàng.");
+                    }*/
+                }
+                catch (JsonException e)
+                {
+                    Debug.LogError($"Lỗi khi parse JSON: {e.Message}");
+                }
+            }
         }
     }
     #endregion

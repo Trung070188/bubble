@@ -176,7 +176,7 @@ public class GameCtr : Singleton<GameCtr>
 
                 //update number click
                 numberClick -= 1;
-                UICtr.instance.SetNumberClickTxt(numberClick.ToString());
+                UICtr.Instance.SetNumberClickTxt(numberClick.ToString());
 
                 //progess boom
                 var collider = hit.collider.transform.GetComponent<BubbleObject>();
@@ -457,7 +457,7 @@ public class GameCtr : Singleton<GameCtr>
     public void OnClickChargeBtn()
     {
         numberClick = DataConfig.DEFAULTARCADECLICKS;
-        UICtr.instance.SetNumberClickTxt(numberClick.ToString());
+        UICtr.Instance.SetNumberClickTxt(numberClick.ToString());
         loseArcadePopup.SetActive(false);
     }
     #endregion

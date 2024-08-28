@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Unity.Mathematics;
 using System.Collections.Generic;
 using System.Net;
+using System.Security.Cryptography;
 
 public class APIRequest
 {
@@ -45,7 +46,9 @@ public class APIRequest
     {
         _url_base = Constants.URL_BASE;
 
-        _request = new UnityWebRequest(_url_base + endPoint + extend, method);
+        string domain = _url_base + endPoint + extend;
+
+        _request = new UnityWebRequest(domain, method);
         Debug.Log($"domain: {_url_base + endPoint + extend}");
         if (timeout == TIMEOUTDEFAULTPARAMETER) _request.timeout = TIMEOUTDEFAULT;
 
@@ -57,7 +60,7 @@ public class APIRequest
                 form.AddField(data.Key, data.Value);
             }
 
-             
+            _request = UnityWebRequest.Post(domain, form);
         }
         _request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
     }

@@ -1,49 +1,52 @@
 using UnityEngine;
+using System.Collections;
 
-
-public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
+public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-    private static T m_Instance = null;
-    public static T instance
+    protected static T _instance;
+
+    public static T Instance
     {
         get
         {
-            // Instance requiered for the first time, we look for it
-            if (m_Instance == null)
+            if (_instance == null)
             {
-                m_Instance = GameObject.FindObjectOfType(typeof(T)) as T;
-                if (m_Instance != null)
+                _instance = GameObject.FindObjectOfType<T>();
+
+                if (_instance == null)
                 {
-                    m_Instance.Init();
+                    _instance = new GameObject(typeof(T).ToString()).AddComponent<T>();
+                    DontDestroyOnLoad(_instance.gameObject);
                 }
             }
-            return m_Instance;
+
+            return _instance;
         }
     }
 
-    public static bool Exists()
+    public static bool IsActive
     {
-        return (m_Instance != null);
-    }
-
-    // If no other monobehaviour request the instance in an awake function
-    // executing before this one, no need to search the object.
-    private void Awake()
-    {
-        if (m_Instance == null)
+        get
         {
-            m_Instance = this as T;
-            m_Instance.Init();
+            return _instance != null;
         }
     }
 
-    // This function is called when the instance is used the first time
-    // Put all the initializations you need here, as you would do in Awake
-    public virtual void Init() { }
-
-    // Make sure the instance isn't referenced anymore when the user quit, just in case.
-    private void OnApplicationQuit()
+    protected virtual void Awake()
     {
-        m_Instance = null;
+        if (_instance == null)
+        {
+            _instance = this as T;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (_instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    protected virtual void OnAwake()
+    {
+
     }
 }

@@ -20,7 +20,7 @@ public class Config : Singleton<Config>
     }*/
 
     #region User Data
-    public APIDataType.User User { get; set; }
+    public APIDataType.User User;
 
     public void SetUser(APIDataType.User user)
     {
